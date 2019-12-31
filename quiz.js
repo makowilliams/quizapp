@@ -63,21 +63,6 @@ function startQuiz() {
     );
 }
 
-function submitAnswer() {
-  $('.container').on('submit', function (event) {
-    event.preventDefault();
-    $('.altBox').hide();
-    $('.feedback').show();
-    let selected = $('input:checked');
-    let answer = selected.val();
-    let correct = STORE[probNumber].correctAnswer;
-    if (answer === correct) {
-      correctAnswer();
-    } else {
-      wrongAnswer();
-    }
-  });
-}
 
 function updateProblem() {
     const html = $(`<ul>
@@ -151,16 +136,71 @@ function correctAnswer() {
     `<h3>Correct!</h3>
       <button type="button" class="nextButton button">Next</button>`
   );
-  updateScore();
+  STORE.score++;
 }
 
 function wrongAnswer() {
   $('.feedback').html(
     `<h3>Incorrect</h3>
-    <p class="sizeMe">The answer is:</p>
+    <p class="sizeMe">Incorrect. The answer is:</p>
     <p class="sizeMe">${STORE[probNumber].correctAnswer}</p>
     <button type="button" class="nextButton button">Next</button>`
   );
 }
 
+
+function submitAnswer() {
+  $('.container').on('submit', function (event) {
+    event.preventDefault();
+    $('.feedback').show();
+    let selected = $('input:checked');
+    let answer = selected.val();
+    let correct = STORE.problems[STORE.probNumber].correctAnswer;
+    if (answer === correct) {
+      correctAnswer();
+    } 
+    else {
+      wrongAnswer()
+    }
+     
+    }
+  )};
+}
+
+function displayResults() {
+  let resultHtml = $(
+    `<div class="results">
+      <form id="js-restart-quiz">
+        <fieldset>
+          <div class="row">
+            <div class="col-12">
+              <legend>Your Score is: ${STORE.score}/${STORE.problems.length}</legend>
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-12">
+              <button type="button" id="restart"> Try Again? </button>
+            </div>
+          </div>
+        </fieldset>
+    </form>
+    </div>`);
+    STORE.nextProblem = 0;
+    STORE.score = 0;
+  $("main").html(resultHtml);
+}
+
+function handleQuestions() {
+  $('body').on('click','#next-question', (event) => {
+    STORE.probNumber === STORE.problems.length?displayResults() : renderAProb();
+  });
+}
+
+
+function makeQuiz() {
   startQuiz()
+  submitAnswer()
+}
+
+$(makeQuiz)
