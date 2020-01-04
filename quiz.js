@@ -152,7 +152,6 @@ function wrongAnswer() {
 function submitAnswer() {
   $('.container').on('submit', function (event) {
     event.preventDefault();
-    $('.feedback').show();
     let selected = $('input:checked');
     let answer = selected.val();
     let correct = STORE.problems[STORE.probNumber].correctAnswer;
@@ -162,9 +161,9 @@ function submitAnswer() {
     else {
       wrongAnswer()
     }
-     
+    $('.feedback').show(); 
     }
-  )};
+  );
 }
 
 function displayResults() {
