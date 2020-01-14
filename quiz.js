@@ -86,7 +86,7 @@ function updateOptions()
   {
     $('.js-options').append(`
 
-        <input type = "radio" name="choices" id="choice${i+1}" value= "${problem.choices[i]}" tabindex ="${i+1}"> 
+        <input type = "radio" name="choices" id="choice${i+1}" value= "${problem.choices[i]}" tabindex ="${i+1}" required> 
         <label for="choice${i+1}"> ${problem.choices[i]}</label> <br/>
         <span id="js-r${i+1}"></span>
     `);
@@ -95,7 +95,7 @@ function updateOptions()
 }
 
 function renderAProb() {
-    let question = STORE.problems[STORE.probNumber];
+    let problem = STORE.problems[STORE.probNumber];
     updateProblem();
     updateScore();
     const questionHtml = $(`
@@ -105,13 +105,13 @@ function renderAProb() {
         <fieldset>
           <div class="row question">
             <div class="col-12">
-              <legend> ${question.problem}</legend>
+              <legend> ${problem.problem}</legend>
             </div>
           </div>
   
-          <div class="row options">
+          <div class="row options" >
             <div class="col-12">
-              <div class="js-options"> </div>
+              <div class="js-options" > </div>
           </div>
         </div>
       
@@ -119,16 +119,50 @@ function renderAProb() {
         <div class="row">
           <div class="col-12">
             <button type = "submit" id="answer" tabindex="5">Submit</button>
-            <button type = "button" id="next-question" tabindex="6"> Next >></button>
           </div>
         </div>
       </fieldset>
       </form>
     </div>`);
 
-  $("main").html(questionHtml);
+  $(".startbox").html(questionHtml);
 updateOptions();
 $("#next-question").hide();
+}
+
+
+function displayResults() {
+  let resultHtml = $(
+    `<div class="results">
+      <form id="js-restart-quiz">
+        <div>
+          <div class="row">
+            <div class="col-12">
+              <h2>Your Score is: ${STORE.score}/${STORE.problems.length}</h2>
+            </div>
+          </div>
+        
+          <div class="row">
+            <div class="col-12">
+              <button type="button" id="restart"> Try Again? </button>
+            </div>
+          </div>
+        </div>
+    </form>
+    </div>`);
+    STORE.nextProblem = 0;
+    STORE.score = 0;
+  $("fieldset").html(resultHtml);
+}
+
+function handleQuestions() {
+  $('body').on('click','.nextButton', (event) => {
+    STORE.probNumber = STORE.probNumber + 1;
+    STORE.probNumber === STORE.problems.length?displayResults() : renderAProb();
+    $('#answer').hide();
+    $('.feedback').hide();
+    $('#answer').show();
+  });
 }
 
 function correctAnswer() {
@@ -136,14 +170,15 @@ function correctAnswer() {
     `<h3>Correct!</h3>
       <button type="button" class="nextButton button">Next</button>`
   );
-  STORE.score++;
+  STORE.score = STORE.score + 1;
 }
 
 function wrongAnswer() {
+  let currentProb = STORE.problems[STORE.probNumber];
   $('.feedback').html(
     `<h3>Incorrect</h3>
-    <p class="sizeMe">Incorrect. The answer is:</p>
-    <p class="sizeMe">${STORE[probNumber].correctAnswer}</p>
+    <p class="sizeMe">The answer is:</p>
+    <p class="sizeMe">${currentProb.correctAnswer}</p>
     <button type="button" class="nextButton button">Next</button>`
   );
 }
@@ -155,44 +190,28 @@ function submitAnswer() {
     let selected = $('input:checked');
     let answer = selected.val();
     let correct = STORE.problems[STORE.probNumber].correctAnswer;
+    if (!selected) {
+      alert('Please choose and option');
+      return;
+    }
     if (answer === correct) {
       correctAnswer();
+      updateScore();
     } 
     else {
-      wrongAnswer()
+      wrongAnswer();
     }
     $('.feedback').show(); 
-    }
+    $('#answer').hide();
+    $("input[type=radio]").attr('disabled', true);
+    $('#next-question').show();
+    } 
   );
 }
 
-function displayResults() {
-  let resultHtml = $(
-    `<div class="results">
-      <form id="js-restart-quiz">
-        <fieldset>
-          <div class="row">
-            <div class="col-12">
-              <legend>Your Score is: ${STORE.score}/${STORE.problems.length}</legend>
-            </div>
-          </div>
-        
-          <div class="row">
-            <div class="col-12">
-              <button type="button" id="restart"> Try Again? </button>
-            </div>
-          </div>
-        </fieldset>
-    </form>
-    </div>`);
-    STORE.nextProblem = 0;
-    STORE.score = 0;
-  $("main").html(resultHtml);
-}
-
-function handleQuestions() {
-  $('body').on('click','#next-question', (event) => {
-    STORE.probNumber === STORE.problems.length?displayResults() : renderAProb();
+function restartQuiz() {
+  $('body').on('click','#restart', (event) => {
+    location.reload();
   });
 }
 
@@ -200,6 +219,8 @@ function handleQuestions() {
 function makeQuiz() {
   startQuiz()
   submitAnswer()
+  handleQuestions()
+  restartQuiz()
 }
 
 $(makeQuiz)

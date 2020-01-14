@@ -1,11 +1,55 @@
-.top {
-    font: white;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#math {
+    color: white;
 }
 
 .startbox {
     background-color: white;
-    align-content: auto;
+    text-align-last: auto;
+    margin-left: 150px;
+    margin-right: 150px;
+
 }
-.qtitle {
-    position: auto;
+
+.whole {
+    margin-left: 150px;
+    margin-right: 150px;
+    color: white;
 }
+
+.question-form {
+    text-align-last: center;
+}
+
+button {
+    margin-top:10px;
+    height: auto;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    color: white;
+    background: rgb(55, 52, 85);
+    border: 0;
+    cursor: pointer;
+    margin-bottom: 0;
+    border-radius:3px;
+    padding: 10px 20px;
+  }
+
+.nextButton {
+    margin-top:10px;
+    height: auto;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    color:  rgb(55, 52, 85);
+    background: white;
+    border: 0;
+    cursor: pointer;
+    margin-bottom: 0;
+    border-radius:3px;
+    padding: 10px 20px;
+}  

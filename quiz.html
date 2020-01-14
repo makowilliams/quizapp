@@ -9,7 +9,7 @@
 </head>
 <body background='https://thumbs.dreamstime.com/z/blue-mathematical-operations-seamless-pattern-addition-subtraction-multiplication-division-dark-background-115266831.jpg'>
     <header>
-        <div>
+        <div class='whole'>
             <h1> Math Quiz</h1>
             <div class='probNumber'></div>
             <div class='score'></div>
@@ -17,6 +17,7 @@
      </header>
     <main class='container'>
         <fieldset class='startbox'>
+            <div>
             <div class='mathbox'>
                 <legend>
                     <h2 id='qtitle'>Multiplication & Division</h2>
@@ -24,10 +25,11 @@
             </div>
             <button id='start'>Start</button>
             <div class="box altBox"></div>
+        </div>
         </fieldset>
+        <div class='feedback whole'></div>
 
     </main>
-    <div class='feedback'></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src='quiz.js'></script>
 </body>
